@@ -17,9 +17,6 @@ public class ParkingLot {
         }
     }
 
-    /**
-     * Singleton instance getter (ensures only one ParkingLot instance exists).
-     */
     public static ParkingLot getInstance(int capacity) {
         if (parkingLot == null) {
             parkingLot = new ParkingLot(capacity);
@@ -27,9 +24,6 @@ public class ParkingLot {
         return parkingLot;
     }
 
-    /**
-     * Parks a car in the nearest available slot.
-     */
     public Ticket parkCar(String regNumber, String color) {
         if (availableSlots.isEmpty()) {
             System.out.println("Sorry, parking lot is full");
@@ -43,9 +37,6 @@ public class ParkingLot {
         return ticket;
     }
 
-    /**
-     * Removes a car from the parking lot when it leaves.
-     */
     public void leave(int slotNumber) {
         if (occupiedSlots.containsKey(slotNumber)) {
             occupiedSlots.remove(slotNumber);
@@ -56,9 +47,6 @@ public class ParkingLot {
         }
     }
 
-    /**
-     * Displays the current status of the parking lot.
-     */
     public void status() {
         if (occupiedSlots.isEmpty()) {
             System.out.println("Parking lot is empty");
@@ -70,9 +58,6 @@ public class ParkingLot {
         }
     }
 
-    /**
-     * Retrieves all registration numbers of cars with a specified color.
-     */
     public void findRegistrationByColor(String color) {
         List<String> regNumbers = new ArrayList<>();
         for (Ticket ticket : occupiedSlots.values()) {
@@ -83,9 +68,6 @@ public class ParkingLot {
         System.out.println(regNumbers.isEmpty() ? "Not found" : String.join(", ", regNumbers));
     }
 
-    /**
-     * Finds the slot number where a specific car (by registration number) is parked.
-     */
     public void findSlotByRegistration(String regNumber) {
         for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
             if (entry.getValue().getCar().getRegistrationNumber().equalsIgnoreCase(regNumber)) {
@@ -96,9 +78,6 @@ public class ParkingLot {
         System.out.println("Not found");
     }
 
-    /**
-     * Retrieves all slot numbers where cars of a particular color are parked.
-     */
     public void findSlotsByColor(String color) {
         List<Integer> slots = new ArrayList<>();
         for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
