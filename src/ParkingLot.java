@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class ParkingLot {
-    private static ParkingLot parkingLot; // Singleton instance
+    private static ParkingLot instance; // Singleton instance
     private int capacity; // Total slots in the parking lot
     private TreeMap<Integer, Ticket> occupiedSlots; // Stores parked cars (slot -> Ticket)
     private PriorityQueue<Integer> availableSlots; // Maintains nearest available slot first
@@ -18,10 +18,10 @@ public class ParkingLot {
     }
 
     public static ParkingLot getInstance(int capacity) {
-        if (parkingLot == null) {
-            parkingLot = new ParkingLot(capacity);
+        if (instance == null) {
+            instance = new ParkingLot(capacity);
         }
-        return parkingLot;
+        return instance;
     }
 
     public Ticket parkCar(String regNumber, String color) {
