@@ -1,5 +1,5 @@
 public class CommandProcessor {
-    private ParkingLot parkingLot;
+    private ParkingLotManager parkingLot;
 
     public void processCommand(String command){
         String[] parts= command.split(" ");

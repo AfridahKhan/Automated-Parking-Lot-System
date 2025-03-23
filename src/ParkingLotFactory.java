@@ -1,5 +1,5 @@
 public class ParkingLotFactory {
-    public static ParkingLot createParkingLot(int capacity) {
-        return ParkingLot.getInstance(capacity);
+    public static ParkingLotManager createParkingLot(int capacity) {
+        return ParkingLotManager.getInstance(capacity);
     }
 }
