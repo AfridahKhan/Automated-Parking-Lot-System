@@ -1,19 +1,24 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 
 class CommandProcessor {
     private Map<String, Command> commands = new HashMap<>();
     private IParkingLot parkingLot;
-    private IParkingQuery parkingQuery;
+    private ParkingQueryService parkingQuery;
 
     public void setParkingLot(IParkingLot parkingLot) {
         this.parkingLot = parkingLot;
         this.parkingQuery = new ParkingQueryService(((ParkingLotManager) parkingLot).getOccupiedSlots());
 
 
+        commands.put("status", new StatusCommand(parkingQuery));
         commands.put("park", new ParkingCommand(parkingLot));
         commands.put("leave", new LeaveCommand(parkingLot));
-        
+        commands.put("registration_numbers_for_cars_with_colour", new FindRegistrationByColorCommand(parkingQuery));
+        commands.put("slot_number_for_registration_number", new FindSlotsByRegistrationCommand(parkingQuery));
+        commands.put("slot_numbers_for_cars_with_colour", new FindSlotsByColorCommand(parkingQuery));
     }
 
     public CommandProcessor() {
@@ -34,4 +39,3 @@ class CommandProcessor {
         }
     }
 }
-
