@@ -1,15 +1,15 @@
 import java.util.List;
 
 public class StatusCommand implements Command {
-    private ParkingQueryService parkingQueryService;
+    private ParkingStatusService parkingStatusService;
 
-    public StatusCommand(ParkingQueryService parkingQueryService) {
-        this.parkingQueryService = parkingQueryService;
+    public StatusCommand(ParkingStatusService parkingStatusService) {
+        this.parkingStatusService = parkingStatusService;
     }
 
     @Override
     public void execute(String[] args) {
-        List<String> statusList = parkingQueryService.getStatus(); // ✅ Get data
+        List<String> statusList = parkingStatusService.getStatus(); // ✅ Get data
         for (String line : statusList) {                   // ✅ Print in UI layer
             System.out.println(line);
         }
