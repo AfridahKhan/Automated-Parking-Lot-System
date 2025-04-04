@@ -1,4 +1,6 @@
-class StatusCommand implements Command {
+import java.util.List;
+
+public class StatusCommand implements Command {
     private ParkingQueryService parkingQueryService;
 
     public StatusCommand(ParkingQueryService parkingQueryService) {
@@ -7,7 +9,11 @@ class StatusCommand implements Command {
 
     @Override
     public void execute(String[] args) {
-        parkingQueryService.status();
+        List<String> statusList = parkingQueryService.getStatus(); // ✅ Get data
+        for (String line : statusList) {                   // ✅ Print in UI layer
+            System.out.println(line);
+        }
     }
-}
+    }
+
 
