@@ -1,19 +1,20 @@
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 
 class CommandProcessor {
     private Map<String, Command> commands = new HashMap<>();
     private IParkingLot parkingLot;
     private ParkingQueryService parkingQuery;
+    private ParkingStatusService parkingStatusService;
 
     public void setParkingLot(IParkingLot parkingLot) {
         this.parkingLot = parkingLot;
         this.parkingQuery = new ParkingQueryService(((ParkingLotManager) parkingLot).getOccupiedSlots());
+        this.parkingStatusService = new ParkingStatusService(((ParkingLotManager) parkingLot).getOccupiedSlots());
 
+        // ✅ Now registering StatusCommand with ParkingStatusService instead of ParkingQueryService
+        commands.put("status", new StatusCommand(parkingStatusService));
 
-        commands.put("status", new StatusCommand(parkingQuery));
         commands.put("park", new ParkingCommand(parkingLot));
         commands.put("leave", new LeaveCommand(parkingLot));
         commands.put("registration_numbers_for_cars_with_colour", new FindRegistrationByColorCommand(parkingQuery));
