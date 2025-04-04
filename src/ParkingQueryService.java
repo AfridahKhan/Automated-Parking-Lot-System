@@ -1,50 +1,24 @@
 import java.util.*;
 
 public class ParkingQueryService implements IParkingQuery{
-    private TreeMap<Integer,Ticket> occupiedSlots;
+    private TreeMap<Integer, Ticket> occupiedSlots;
+
     public ParkingQueryService(TreeMap<Integer, Ticket> occupiedSlots) {
         this.occupiedSlots = occupiedSlots;
     }
 
-    @Override
-    public void findRegistrationByColor(String color){
-        List<String> regNumbers = new ArrayList<>();
-        for(Ticket ticket: occupiedSlots.values()){
-            if(ticket.getCar().getColor().equalsIgnoreCase(color)){
-                regNumbers.add(ticket.getCar().getRegistrationNumber());
-            }
-        }
-        System.out.println(regNumbers.isEmpty() ? "Not found" : String.join(", ",regNumbers));
-    }
-    @Override
-    public void findSlotByRegistration(String regNumber){
-        for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
-            if (entry.getValue().getCar().getRegistrationNumber().equalsIgnoreCase(regNumber)) {
-                System.out.println(entry.getKey());
-                return;
-            }
-        }
-        System.out.println("Not found");
-    }
-    @Override
-    public void findSlotsByColor(String color){
-        List<Integer> slots = new ArrayList<>();
-        for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
-            if (entry.getValue().getCar().getColor().equalsIgnoreCase(color)) {
-                slots.add(entry.getKey());
-            }
-        }
-        System.out.println(slots.isEmpty() ? "Not found" : slots.toString().replaceAll("[\\[\\]]", ""));
-    }
-
-    public void status() {
+    public List<String> getStatus() {
+        List<String> statusList = new ArrayList<>();
         if (occupiedSlots.isEmpty()) {
-            System.out.println("Parking lot is empty");
-            return;
+            statusList.add("Parking lot is empty");
+        } else {
+            statusList.add("Slot No. | Registration No. | Colour");
+            for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
+                statusList.add(entry.getKey() + " | " +
+                        entry.getValue().getCar().getRegistrationNumber() + " | " +
+                        entry.getValue().getCar().getColor());
+            }
         }
-        System.out.println("Slot No. | Registration No. | Colour");
-        for (Map.Entry<Integer, Ticket> entry : occupiedSlots.entrySet()) {
-            System.out.println(entry.getKey() + " | " + entry.getValue().getCar().getRegistrationNumber() + " | " + entry.getValue().getCar().getColor());
-        }
+        return statusList;
     }
 }
