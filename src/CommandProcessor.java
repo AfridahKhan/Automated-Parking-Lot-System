@@ -1,67 +1,42 @@
-public class CommandProcessor {
-    private ParkingLotManager parkingLot;
+import java.util.HashMap;
+import java.util.Map;
 
-    public void processCommand(String command){
-        String[] parts= command.split(" ");
-        switch (parts[0]){
-            case "create_parking_lot":
-                if(parts.length==2){
-                    int capacity = Integer.parseInt(parts[1]);
-                    parkingLot = ParkingLotFactory.createParkingLot(capacity);
-                    System.out.println("Created a parking lot with " + capacity + " slots");
-                } else {
-                    System.out.println("Invalid command syntax");
-                }
-                break;
-            case "park":
-                if(parts.length == 3 && parkingLot != null){
-                    parkingLot.parkCar(parts[1],parts[2]);
-                }else{
-                    System.out.println("Invalid command or parking lot not initialized");
-                }
-                break;
-            case "leave":
-                if (parts.length == 2 && parkingLot != null) {
-                    int slot = Integer.parseInt(parts[1]);
-                    parkingLot.leave(slot);
-                } else {
-                    System.out.println("Invalid command or parking lot not initialized");
-                }
-                break;
-            case "status":
-                if (parkingLot != null) {
-                    parkingLot.status();
-                } else {
-                    System.out.println("Parking lot not initialized");
-                }
-                break;
-            case "registration_numbers_for_cars_with_colour":
-                if (parts.length == 2 && parkingLot != null) {
-                    parkingLot.findRegistrationByColor(parts[1]);
-                } else {
-                    System.out.println("Invalid command or parking lot not initialized");
-                }
-                break;
-            case "slot_number_for_registration_number":
-                if (parts.length == 2 && parkingLot != null) {
-                    parkingLot.findSlotByRegistration(parts[1]);
-                } else {
-                    System.out.println("Invalid command or parking lot not initialized");
-                }
-                break;
-            case "slot_numbers_for_cars_with_colour":
-                if (parts.length == 2 && parkingLot != null) {
-                    parkingLot.findSlotsByColor(parts[1]);
-                } else {
-                    System.out.println("Invalid command or parking lot not initialized");
-                }
-                break;
-            case "exit":
-                System.out.println("Exiting system...");
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Invalid command");
+class CommandProcessor {
+    private Map<String, Command> commands = new HashMap<>();
+    private IParkingLot parkingLot;
+    private ParkingQueryService parkingQuery;
+    private ParkingStatusService parkingStatusService;
+
+    public void setParkingLot(IParkingLot parkingLot) {
+        this.parkingLot = parkingLot;
+        this.parkingQuery = new ParkingQueryService(((ParkingLotManager) parkingLot).getOccupiedSlots());
+        this.parkingStatusService = new ParkingStatusService(((ParkingLotManager) parkingLot).getOccupiedSlots());
+
+        // ✅ Now registering StatusCommand with ParkingStatusService instead of ParkingQueryService
+        commands.put("status", new StatusCommand(parkingStatusService));
+
+        commands.put("park", new ParkingCommand(parkingLot));
+        commands.put("leave", new LeaveCommand(parkingLot));
+        commands.put("registration_numbers_for_cars_with_colour", new FindRegistrationByColorCommand(parkingQuery));
+        commands.put("slot_number_for_registration_number", new FindSlotsByRegistrationCommand(parkingQuery));
+        commands.put("slot_numbers_for_cars_with_colour", new FindSlotsByColorCommand(parkingQuery));
+    }
+
+    public CommandProcessor() {
+        commands.put("create_parking_lot", new CreateParkingLotCommand(this));
+        commands.put("exit", new ExitCommand());
+    }
+
+    public void processCommand(String commandInput) {
+        String[] parts = commandInput.split(" ");
+        String commandName = parts[0];
+        String[] args = parts.length > 1 ? java.util.Arrays.copyOfRange(parts, 1, parts.length) : new String[0];
+
+        Command command = commands.get(commandName);
+        if (command != null) {
+            command.execute(args);
+        } else {
+            System.out.println("Invalid command");
         }
     }
 }
