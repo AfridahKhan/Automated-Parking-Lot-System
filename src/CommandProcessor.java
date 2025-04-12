@@ -12,7 +12,7 @@ class CommandProcessor {
         this.parkingQuery = new ParkingQueryService(((ParkingLotManager) parkingLot).getOccupiedSlots());
         this.parkingStatusService = new ParkingStatusService(((ParkingLotManager) parkingLot).getOccupiedSlots());
 
-        // ✅ Now registering StatusCommand with ParkingStatusService instead of ParkingQueryService
+
         commands.put("status", new StatusCommand(parkingStatusService));
 
         commands.put("park", new ParkingCommand(parkingLot));
